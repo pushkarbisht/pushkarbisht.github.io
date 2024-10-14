@@ -1,0 +1,49 @@
+<!-- Include stylesheet -->
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+
+<!-- Create the editor container -->
+<div id="editor">
+  
+</div>
+
+<!-- Include the Quill library -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+<!-- Initialize Quill editor -->
+<script>
+     const quill = new Quill('#editor', {
+    theme: 'snow'
+  });
+
+  let content = localStorage.getItem("content");
+  quill.setContents(JSON.parse(content), 'api');
+
+
+
+  
+
+  const observer = new MutationObserver(() => {
+  console.log("callback that runs when observer is triggered");
+  //console.log(quill.getContents());
+  var myJSONString = JSON.stringify(quill.getContents());
+    var myEscapedJSONString = myJSONString.replace(/\\n/g, "\\n")
+                                      .replace(/\\'/g, "\\'")
+                                      .replace(/\\"/g, '\\"')
+                                      .replace(/\\&/g, "\\&")
+                                      .replace(/\\r/g, "\\r")
+                                      .replace(/\\t/g, "\\t")
+                                      .replace(/\\b/g, "\\b")
+                                      .replace(/\\f/g, "\\f");
+
+                                      localStorage.setItem("content",myEscapedJSONString);
+
+});
+
+
+observer.observe(document.querySelector("#editor"), {
+  subtree: true,
+  childList: true,
+});
+
+
+</script>
