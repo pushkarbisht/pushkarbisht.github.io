@@ -3,7 +3,7 @@
 
 <!-- Create the editor container -->
 <div id="editor">
-  
+
 </div>
 
 <!-- Include the Quill library -->
@@ -11,7 +11,7 @@
 
 <!-- Initialize Quill editor -->
 <script>
-     const quill = new Quill('#editor', {
+  const quill = new Quill('#editor', {
     theme: 'snow'
   });
 
@@ -20,30 +20,26 @@
 
 
 
-  
 
-  const observer = new MutationObserver(() => {
-  console.log("callback that runs when observer is triggered");
-  //console.log(quill.getContents());
-  var myJSONString = JSON.stringify(quill.getContents());
-    var myEscapedJSONString = myJSONString.replace(/\\n/g, "\\n")
-                                      .replace(/\\'/g, "\\'")
-                                      .replace(/\\"/g, '\\"')
-                                      .replace(/\\&/g, "\\&")
-                                      .replace(/\\r/g, "\\r")
-                                      .replace(/\\t/g, "\\t")
-                                      .replace(/\\b/g, "\\b")
-                                      .replace(/\\f/g, "\\f");
+  quill.on('text-change', (delta, oldDelta, source) => {
+    if (source == 'api') {
 
-                                      localStorage.setItem("content",myEscapedJSONString);
+    } else if (source == 'user') {
 
-});
+      var myJSONString = JSON.stringify(quill.getContents());
+      var myEscapedJSONString = myJSONString.replace(/\\n/g, "\\n")
+        .replace(/\\'/g, "\\'")
+        .replace(/\\"/g, '\\"')
+        .replace(/\\&/g, "\\&")
+        .replace(/\\r/g, "\\r")
+        .replace(/\\t/g, "\\t")
+        .replace(/\\b/g, "\\b")
+        .replace(/\\f/g, "\\f");
 
+      localStorage.setItem("content", myEscapedJSONString);
+    }
+  });
 
-observer.observe(document.querySelector("#editor"), {
-  subtree: true,
-  childList: true,
-});
 
 
 </script>
